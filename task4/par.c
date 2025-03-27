@@ -1,6 +1,6 @@
 #include "par.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     struct Options opts = {0};
     int opt;
