@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-
 #include "sort.h"
 
 
@@ -10,7 +5,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 4) 
     {
-        fprintf(stderr, "Использование: %s входной_файл выходной_файл [asc|desc|len|len_d]\n", argv[0]);
+        fprintf(stderr, "Использование: %s входной_файл выходной_файл [alph|alph_d|len|len_r]\n", argv[0]);
         return EXIT_FAILURE;
     }
 
@@ -19,21 +14,21 @@ int main(int argc, char *argv[])
     const char *sort_method = argv[3];
 
     int (*compare)(const void*, const void*);
-    if (strcmp(sort_method, "asc") == 0) 
+    if (strcmp(sort_method, "alph") == 0) 
     {
-        compare = compare_asc;
+        compare = compare_alph;
     }    
-    else if (strcmp(sort_method, "desc") == 0)
+    else if (strcmp(sort_method, "alph_d") == 0)
     {
-        compare = compare_desc;
+        compare = compare_alph_d;
     }    
     else if (strcmp(sort_method, "len") == 0) 
     {
-        compare = compare_len_asc;
+        compare = compare_len;
     }
-    else if (strcmp(sort_method, "len_d") == 0) 
+    else if (strcmp(sort_method, "len_r") == 0) 
     {
-        compare = compare_len_desc;
+        compare = compare_len_reverse;
     }    
     else 
     {
@@ -145,7 +140,7 @@ int is_empty_line(const char *line)
 }
 
 
-int compare_asc(const void *a, const void *b) 
+int compare_alph(const void *a, const void *b) 
 {
     const char *str1 = *(const char **)a;
     const char *str2 = *(const char **)b;
@@ -153,21 +148,21 @@ int compare_asc(const void *a, const void *b)
     return get_first_letter(str1, str2);
    
 }
-int compare_desc(const void *a, const void *b) 
+int compare_alph_d(const void *a, const void *b) 
 {
-    return -compare_asc(a, b);
+    return -compare_alph(a, b);
 }
 
-int compare_len_asc(const void *a, const void *b) 
+int compare_len(const void *a, const void *b) 
 {
     size_t len_a = strlen(*(const char **)a);
     size_t len_b = strlen(*(const char **)b);
     return (len_a > len_b) - (len_a < len_b);
 }
 
-int compare_len_desc(const void *a, const void *b) 
+int compare_len_reverse(const void *a, const void *b) 
 {
-    return -compare_len_asc(a, b);
+    return -compare_len(a, b);
 }
 
 
