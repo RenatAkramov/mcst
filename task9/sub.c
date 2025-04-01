@@ -2,47 +2,47 @@
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2)
+    if (argc != 2) // Проверка количества аргументов командной строки
     {
         fprintf(stderr, "Invalid file name");
         return 1;
     }
+
     char* file_name = argv[1]; 
     FILE* file = fopen(file_name, "r");
     if (!file)
     {
         perror("Error opening file");
         return 1;
-    }
+    } // Открытие и проверка файла
 
-    int* numbers = NULL;
-    int count = 0;    
+    int* numbers = NULL; // Массив чисел
+    int count = 0;       // Количество чисел
     numbers = read_array(file, &count);
+
     if (numbers == NULL)
     {
         fprintf(stderr, "Error creating array\n");
     }
-    for (int i = 0; i < count; i++)
-    {
-        printf("%d\n",numbers[i]);
-    }
+    int start   = 0; // Начало максимальной последовательности
+    int end     = 0; // Конец  максимальной последовательности
+    int max_sum = 0; // Сумма  максимальной последовательности
 
-    int start = 0;  // Начало максимальной последовательности
-    int end   = 0;  // Конец максимальной последовательности
+    find_max_sequence(numbers, count, &start, &end, &max_sum);
 
-    find_max_sequence(numbers, count, &start, &end);
-
-    for (int i = start; i < end + 1; i++)
+    for (int i = start; i < end + 1; i++) // Вывод данных в консоль
     {
         printf("%d ", numbers[i]);
     }
+    printf("\n max_sum = %d\n", max_sum);
     return 1;
 }
 
-int* read_array(FILE* file, int* count)
+// Считывание данных с файла
+int* read_array(FILE* file, int* count) 
 {
-    int* numbers = NULL;    
-    int num;
+    int* numbers = NULL; // Массив чисел   
+    int num;             // Считываемое число
 
     while (fscanf(file, "%d", &num) == 1) 
     {
@@ -60,7 +60,8 @@ int* read_array(FILE* file, int* count)
     return numbers;
 }
 
-void find_max_sequence(int* arr, int count, int *start, int *end) 
+// Нахождение максимальной последовательности
+void find_max_sequence(int* arr, int count, int *start, int *end, int* max_sum) 
 {
     if (count == 0) // Проверка ситуации если массив пустой
     {
@@ -69,7 +70,7 @@ void find_max_sequence(int* arr, int count, int *start, int *end)
         return;
     }
 
-    int max_sum = arr[0];     // Максимальная сумма
+    *max_sum = arr[0];     // Максимальная сумма
     int current_sum = arr[0]; // Текущая сумма
     int current_start = 0;    // Начало текущей последовательности
 
@@ -82,9 +83,9 @@ void find_max_sequence(int* arr, int count, int *start, int *end)
         else 
         {
             // Проверяем, является ли текущая последовательность максимальной
-            if (current_sum > max_sum) 
+            if (current_sum > *max_sum) 
             {
-                max_sum = current_sum;
+                *max_sum = current_sum;
                 *start = current_start;
                 *end = i - 1;
             }
@@ -95,8 +96,9 @@ void find_max_sequence(int* arr, int count, int *start, int *end)
     }
 
     // Проверяем последнюю последовательность
-    if (current_sum > max_sum) 
+    if (current_sum > *max_sum) 
     {
+        *max_sum = current_sum;
         *start = current_start;
         *end = count - 1;
     }
