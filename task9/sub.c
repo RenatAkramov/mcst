@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2) // Проверка количества аргументов командной строки
+    if (argc != 2 && argc != 3) // Проверка количества аргументов командной строки
     {
         fprintf(stderr, "Invalid file name");
         return 1;
@@ -35,6 +35,18 @@ int main(int argc, char* argv[])
         printf("%d ", numbers[i]);
     }
     printf("\n max_sum = %d\n", max_sum);
+
+
+    if (argc == 3)
+    {
+        fprintf(stdout, "The data is output to the file: %s", argv[2]);
+        FILE* file_out = fopen(argv[2], "w");
+        for (int i = start; i < end + 1; i++) // Вывод данных в консоль
+        {
+            fprintf(file_out, "%d ", numbers[i]);
+        }
+        fprintf(file_out, "\n max_sum = %d\n", max_sum);
+    }
     return 1;
 }
 

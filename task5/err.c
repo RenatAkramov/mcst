@@ -2,14 +2,15 @@
 
 int main(int argc, char* argv[])
 {
-    errno = 0;
-    if (argc == 1)
+    errno = 0;     //Обнулил errno
+    if (argc == 1) //Нет названия файла
     {
         printf("No file name\n");
         return 1;
     }
-    int file = open(argv[1], O_RDONLY);
-    if (file != -1)
+
+    int file = open(argv[1], O_RDONLY); //Открываем файл
+    if (file != -1) //Проверка если файл открылся
     {
         printf("File open\n");
         close(file);

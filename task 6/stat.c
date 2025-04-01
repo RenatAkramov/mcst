@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     }
     for (int i = 1; i < argc; i++)
     {
-        struct stat file_info;
+        struct stat file_info = {0};
         const char* file_name = argv[1];
         
         if (stat(file_name, &file_info) == -1)
@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
             return 1;
         }
 
-        printf("File %s\n", file_name);
+        printf("File: %s\n", file_name);
         printf("Type: ");
 
         if (S_ISREG(file_info.st_mode))
@@ -52,12 +52,9 @@ int main(int argc, char* argv[])
 
         printf("Size in byte: %ld\n", file_info.st_size);
         printf("Inode: %ld\n", file_info.st_ino);
-        time_t c_time = file_info.st_ctime;
-        time_t m_time = file_info.st_mtime;
-        time_t a_time = file_info.st_atime;
-        printf("The time the file was last modified: %s", ctime(&m_time));
-        printf("File creation time: %s", ctime(&c_time));
-        printf("Last access time of the file: %s", ctime(&a_time));
+        printf("The time the file was last modified: %s", ctime(&file_info.st_mtime));
+        printf("File creation time: %s", ctime(&file_info.st_ctime));
+        printf("Last access time of the file: %s", ctime(&file_info.st_atime));
     }
     return 0;
 }
