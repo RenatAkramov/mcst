@@ -8,6 +8,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdint.h>
+#include <sys/stat.h>
 
 
 
@@ -55,19 +56,15 @@ enum type
 };
 enum operations
 {
-    AND  = 1,
-    NOT  = 2,
-    OR   = 3,
-    IMP  = 4,
-    XOR  = 5,
-    XNOR = 6
+    AND  = 7,
+    NOT  = 8,
+    OR   = 9,
+    IMP  = 10,
+    XOR  = 11,
+    XNOR = 12,
 };
 
-enum hsh
-{
-    OKEY = 1,
-    ERRORS = 0
-};
+
 
 
 
@@ -80,11 +77,15 @@ struct operations_t
 
 enum errorcode
 {
-    ERROR_E = 0,
-    ERROR_P = 1,
-    ERROR_N = 2,
-    ERROR_T = 3,
-    ERROR_G = 4
+    ERROR_H = 0,
+    ERROR_F = 1,
+    ERROR_X = 2,
+    ERROR_E = 3,
+    ERROR_T = 4,
+    ERROR_P = 5,
+    ERROR_V = 6,
+    ERROR_N = 7,
+    ERROR_G = 8
 };
 
 //const struct operations_t operations_[amount_operations] = {{"AND", AND}, {"OR", OR}, {"NOT", NOT}, {"XOR", XOR}, {"IMP", IMP}, {"XNOR", XNOR}};
@@ -100,25 +101,29 @@ struct FUNKTION_T
 struct CONVERSIONS* make_conversion();
 struct tokens_t* create_lec(struct CONVERSIONS* conversion);
 int create_tokens(int len_buf, struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-
-/*struct NODE* new_node(int type, union values value, struct NODE* vol, struct NODE* vol2);
 struct NODE* create_tree(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
+void  spend(struct NODE* node);
 struct NODE* GetP(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
+struct NODE* GetX(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
+struct NODE* GetN(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
+struct NODE* GetF(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
+struct NODE* copy_node(struct NODE* node);
+struct NODE* GetH(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
+struct NODE* GetG(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 struct NODE* GetE(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 struct NODE* GetT(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-struct NODE* GetG(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-struct NODE* GetN(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 void  SyntaxERROR();
+struct NODE* new_node(int type, union values value, struct NODE* vol, struct NODE* vol2);
 struct NODE* GetV(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-void  spend(struct NODE* node);
+
+/*
+
 int   DrawTree(struct NODE* root);
 int   DrawNode(struct NODE* node, FILE* file_ptr);
 struct CONVERSIONS* make_conversion();
-struct NODE* GetF(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-struct NODE* copy_node(struct NODE* node);
+
 struct NODE* diff(struct NODE* node);
 struct NODE* simplifare(struct NODE* node, struct NODE* root);
-struct tokens_t* create_lec(struct CONVERSIONS* conversion);
 
 struct NODE* GetC(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 unsigned long long hash_func(int val, struct NODE* node);
