@@ -1,0 +1,1 @@
+(1 AND B) OR (C AND NOT D)$

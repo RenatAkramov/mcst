@@ -1,0 +1,6 @@
++   OR
+*   AND
+!   NOT
+(+) XOR
+->  IMP импликация 
+~   XNOR equivalence эквивалентность
