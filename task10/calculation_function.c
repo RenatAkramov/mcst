@@ -1,36 +1,5 @@
 #include "bul.h"
-struct CONVERSIONS* make_conversion()
-{
-    struct CONVERSIONS* conversion = (struct CONVERSIONS*) calloc(1, sizeof(struct CONVERSIONS));
-    conversion->p = 0;
-    conversion->amount_var = 0;
 
-    FILE* file_in = fopen("primer.txt", "r");
-    if (file_in == NULL)
-    {
-        perror("ERROR: in file_in");
-        return NULL;
-    }
-    struct stat file_info = {0};
-    char* file_name = "primer.txt";
-        
-    if (stat(file_name, &file_info) == -1)//Для нахождения длины строки в файле
-    {
-        fprintf(stderr, "ERROR: stat with %s\n", file_name);
-        return NULL;
-    }
-
-    conversion->s = calloc((int) file_info.st_size + 1,sizeof(char));
-    if (fgets(conversion->s, (int) file_info.st_size + 1, file_in) == NULL)
-    {
-        fprintf(stderr,"ERROR: in fgets\n");
-        return NULL;
-    }
-    printf("%s\n", conversion->s);
-
-    fclose(file_in);
-    return conversion;
-}
 
 void amount_var(struct NODE* node,struct CONVERSIONS* conversion)
 {
@@ -200,8 +169,11 @@ struct NODE* calculation(struct NODE* node)
 struct var_t* create_var(struct CONVERSIONS* conversion)
 {
     struct var_t* mas_var = (struct var_t*) calloc(conversion->amount_var, sizeof(struct var_t));
+    char name;
     for (int i = 0; i < conversion->amount_var; i++)
     {
+        printf("Enter name definition\n");
+        scanf("%c", &mas_var[i].name_var );
         printf("Enter definition\n");
         int def = -1;
         scanf("%d", &def);
@@ -212,8 +184,7 @@ struct var_t* create_var(struct CONVERSIONS* conversion)
         }
 
         mas_var[i].definition_var = def;
-
-        mas_var[i].name_var = 'a' + i;
+      
 
     }
     return mas_var;

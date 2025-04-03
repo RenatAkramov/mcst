@@ -6,7 +6,9 @@ int main()
     struct tokens_t* arr_token = create_lec(conversion);
     struct NODE* root = create_tree(conversion, arr_token);
     DrawTree(root);
-    amount_var(root, conversion);
+
+    print_truth_table(root);
+    /*amount_var(root, conversion);
     printf("amount Var: %d\n",  conversion->amount_var);
 
 
@@ -20,7 +22,7 @@ int main()
     root = substitute_value(root, mas_var, conversion);
     DrawTree(root);
     root = calculation(root);
-    printf("ANSWER: %d", root->value);
+    printf("ANSWER: %d", root->value);*/
 
     return 1;
 }

@@ -1,6 +1,7 @@
 #ifndef differentiator_h
 #define differentiator_h
 #define amount_operations 6
+#define max_variable 28
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,6 +26,11 @@ union values
     int var_value;
     int oper_value;
 };
+
+typedef struct {
+    char name;
+    int value;
+} Variable;
 
 struct NODE
 {
@@ -128,6 +134,10 @@ void   amount_var(struct NODE* node, struct CONVERSIONS* conversion);
 struct var_t* create_var(struct CONVERSIONS* conversion);
 struct NODE* substitute_value(struct NODE* node,struct var_t* mas_var,struct CONVERSIONS* conversion);
 struct NODE* calculation(struct NODE* node);
+void print_truth_table(struct NODE* root);
+void collect_variables(struct NODE* node, Variable* vars, int* count); 
+
+int evaluate(struct NODE* node, Variable* vars, int var_count);
 
 /*
 struct NODE* diff(struct NODE* node);
