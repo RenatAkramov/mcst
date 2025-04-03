@@ -1,36 +1,5 @@
 #include "bul.h"
 
-struct CONVERSIONS* make_conversion()
-{
-    struct CONVERSIONS* conversion = (struct CONVERSIONS*) calloc(1, sizeof(struct CONVERSIONS));
-    conversion->p = 0;
-
-    FILE* file_in = fopen("primer.txt", "r");
-    if (file_in == NULL)
-    {
-        perror("ERROR: in file_in");
-        return NULL;
-    }
-    struct stat file_info = {0};
-    char* file_name = "primer.txt";
-        
-    if (stat(file_name, &file_info) == -1)//Для нахождения длины строки в файле
-    {
-        fprintf(stderr, "ERROR: stat with %s\n", file_name);
-        return NULL;
-    }
-
-    conversion->s = calloc((int) file_info.st_size + 1,sizeof(char));
-    if (fgets(conversion->s, (int) file_info.st_size + 1, file_in) == NULL)
-    {
-        fprintf(stderr,"ERROR: in fgets\n");
-        return NULL;
-    }
-    printf("%s\n", conversion->s);
-
-    fclose(file_in);
-    return conversion;
-}
 
 struct tokens_t* create_lec(struct CONVERSIONS* conversion)
 {
@@ -41,7 +10,7 @@ struct tokens_t* create_lec(struct CONVERSIONS* conversion)
         arr_token[i].name = (char*) calloc(100, sizeof(char));
     }
     create_tokens(len_buf, conversion, arr_token);
-    //printf("LEC OK: %d\n", arr_token[1]. name);
+
     for (int i = 0; i < len_buf; i++)
     {
         printf("%s ", arr_token[i].name);
@@ -191,3 +160,4 @@ int create_tokens(int len_buf, struct CONVERSIONS* conversion, struct tokens_t* 
     conversion->p = 0;
     return 1;
 }
+

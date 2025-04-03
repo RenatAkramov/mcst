@@ -16,6 +16,7 @@ struct CONVERSIONS
 {
     char* s;
     int p;
+    int amount_var;
 };
 
 union values
@@ -88,6 +89,12 @@ enum errorcode
     ERROR_G = 8
 };
 
+struct var_t
+{
+    char name_var;
+    int definition_var;
+};
+
 extern const struct operations_t operations[];
 
 struct FUNKTION_T
@@ -100,9 +107,9 @@ struct FUNKTION_T
 
 struct CONVERSIONS* make_conversion();
 struct tokens_t* create_lec(struct CONVERSIONS* conversion);
-int create_tokens(int len_buf, struct CONVERSIONS* conversion, struct tokens_t* arr_token);
+int    create_tokens(int len_buf, struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 struct NODE* create_tree(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-void  spend(struct NODE* node);
+void   spend(struct NODE* node);
 struct NODE* GetP(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 struct NODE* GetX(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 struct NODE* GetN(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
@@ -112,11 +119,15 @@ struct NODE* GetH(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 struct NODE* GetG(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 struct NODE* GetE(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 struct NODE* GetT(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-void  SyntaxERROR();
+void   SyntaxERROR(int errorcode);
 struct NODE* new_node(int type, union values value, struct NODE* vol, struct NODE* vol2);
 struct NODE* GetV(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-int   DrawTree(struct NODE* root);
-int   DrawNode(struct NODE* node, FILE* file_ptr);
+int    DrawTree(struct NODE* root);
+int    DrawNode(struct NODE* node, FILE* file_ptr);
+void   amount_var(struct NODE* node, struct CONVERSIONS* conversion);
+struct var_t* create_var(struct CONVERSIONS* conversion);
+struct NODE* substitute_value(struct NODE* node,struct var_t* mas_var,struct CONVERSIONS* conversion);
+struct NODE* calculation(struct NODE* node);
 
 /*
 struct NODE* diff(struct NODE* node);
