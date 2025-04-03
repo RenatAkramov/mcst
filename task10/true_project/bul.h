@@ -88,7 +88,7 @@ enum errorcode
     ERROR_G = 8
 };
 
-//const struct operations_t operations_[amount_operations] = {{"AND", AND}, {"OR", OR}, {"NOT", NOT}, {"XOR", XOR}, {"IMP", IMP}, {"XNOR", XNOR}};
+extern const struct operations_t operations[];
 
 struct FUNKTION_T
 {
@@ -115,13 +115,10 @@ struct NODE* GetT(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
 void  SyntaxERROR();
 struct NODE* new_node(int type, union values value, struct NODE* vol, struct NODE* vol2);
 struct NODE* GetV(struct CONVERSIONS* conversion, struct tokens_t* arr_token);
-
-/*
-
 int   DrawTree(struct NODE* root);
 int   DrawNode(struct NODE* node, FILE* file_ptr);
-struct CONVERSIONS* make_conversion();
 
+/*
 struct NODE* diff(struct NODE* node);
 struct NODE* simplifare(struct NODE* node, struct NODE* root);
 
