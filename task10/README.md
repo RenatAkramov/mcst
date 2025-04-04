@@ -11,7 +11,7 @@ make
 
 2. Запустите программу:
 ```
-./syntax_analysis
+./syntax_analysis.out
 ```
 
 ## Usage
