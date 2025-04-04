@@ -2,7 +2,7 @@
 
 
 
-
+//Создаем дерево
 struct NODE* create_tree(struct CONVERSIONS* conversion, struct tokens_t* arr_token)
 {
     struct NODE* root;
@@ -55,13 +55,6 @@ struct NODE* GetN(struct CONVERSIONS* conversion, struct tokens_t* arr_token)
 {
     printf("Current token index: %d, token: %s (type=%d)\n", conversion->p, arr_token[conversion->p].name, arr_token[conversion->p].type);
 
-    if (arr_token[conversion->p].type == OPER) 
-    {
-        fprintf(stderr,"ERROR: Operator '%s' in GetN\n", arr_token[conversion->p].name);
-        SyntaxERROR(ERROR_N);
-        return NULL;
-    }
-
     int val_value = 0;
     int j = 0;
 
@@ -72,6 +65,12 @@ struct NODE* GetN(struct CONVERSIONS* conversion, struct tokens_t* arr_token)
         {
             val_value = val_value * 10 + (arr_token[conversion->p].name[j] - '0');
             j++;
+        }
+        if (val_value != 0 || val_value != 1)
+        {
+            fprintf(stderr,"ERROR: number not 1 or 0 in GetN\n");
+            SyntaxERROR(ERROR_N);
+            return NULL;
         }
         union values value;
         value.num_value = val_value;

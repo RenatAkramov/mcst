@@ -1,4 +1,5 @@
 #include "bul.h"
+//Создаем структуру со строкой из файла 
 struct CONVERSIONS* make_conversion()
 {
     struct CONVERSIONS* conversion = (struct CONVERSIONS*) calloc(1, sizeof(struct CONVERSIONS));
@@ -32,15 +33,19 @@ struct CONVERSIONS* make_conversion()
     return conversion;
 }
 
+// Начало создания токенов
 struct tokens_t* create_lec(struct CONVERSIONS* conversion)
 {
     int len_buf = strlen(conversion->s); // Длина строчки
-    struct tokens_t* arr_token = (struct tokens_t*) calloc(len_buf, sizeof(struct tokens_t));
+    struct tokens_t* arr_token = (struct tokens_t*) calloc(len_buf, sizeof(struct tokens_t));//Массив токенов
+    assert(arr_token);
     for (int i = 0; i < len_buf; i++)
     {
         arr_token[i].name = (char*) calloc(100, sizeof(char));
     }
-    create_tokens(len_buf, conversion, arr_token);
+    int result = create_tokens(len_buf, conversion, arr_token);//Создание токенов
+
+    if (result == 0) return NULL;
 
     for (int i = 0; i < len_buf; i++)
     {
@@ -51,7 +56,7 @@ struct tokens_t* create_lec(struct CONVERSIONS* conversion)
 }
 
 
-
+//Cоздание токенов
 int create_tokens(int len_buf, struct CONVERSIONS* conversion, struct tokens_t* arr_token)
 {
     for (int i = 0; i < len_buf;)
@@ -65,12 +70,21 @@ int create_tokens(int len_buf, struct CONVERSIONS* conversion, struct tokens_t* 
         {
             arr_token[conversion->p].type = NUM;
             int j = 0;
-            while (isdigit(conversion->s[i]))
+            if (isdigit(conversion->s[i]))
             {
-                assert(arr_token[conversion->p].name);
-                arr_token[conversion->p].name[j] = conversion->s[i];
-                i++;
-                j++;
+                if(conversion->s[i] == '1' || conversion->s[i] == '0')
+                {
+                    assert(arr_token[conversion->p].name);
+                    arr_token[conversion->p].name[j] = conversion->s[i];
+                    i++;
+                    j++;
+                }
+                else
+                {
+                    fprintf(stderr, "ERROR: in lexical_analysis, it is not correct number\n");
+                    return 0;
+                }
+                
             }
             value.num_value = NUM;
             arr_token[conversion->p].value = value;
@@ -182,12 +196,7 @@ int create_tokens(int len_buf, struct CONVERSIONS* conversion, struct tokens_t* 
             conversion->p++;
             i++;
         }
-        if(conversion->p - 2 >= 0)
-        {
-            printf("before: %s now: %s\n", arr_token[conversion->p - 2].name, arr_token[conversion->p - 1].name);
-        }
     }
-    printf("lec OK\n");
     conversion->p = 0;
     return 1;
 }

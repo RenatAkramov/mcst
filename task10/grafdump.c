@@ -1,4 +1,5 @@
 #include "bul.h"
+
 const struct operations_t operations[] = {
     {"AND", AND}, 
     {"OR", OR}, 
@@ -7,17 +8,16 @@ const struct operations_t operations[] = {
     {"IMP", IMP}, 
     {"XNOR", XNOR}
 };
+
 int DrawTree(struct NODE* root)
-{
-    
+{   
     if (!root)
     {
-        fprintf(stderr, "Drawing error: root(%p)\n", root);
+        fprintf(stderr, "Drawing error: root(%p)\n", (void*) root);
         return -1;
     }
 
     FILE* file_ptr = fopen("grafdump.dot", "w");
-
     if (!file_ptr)
     {
         fprintf(stderr, "File \"grafdump.dot\" error!\n");
@@ -32,9 +32,14 @@ int DrawTree(struct NODE* root)
 
     fclose(file_ptr);
 
-    system("dot grafdump.dot -Tpng -o Dump.png");
+    if (system("dot grafdump.dot -Tpng -o Dump.png") != 0)
+    {
+        fprintf(stderr, "ERROR: in system");
+        perror("system error");
+        return 0;
+    }
 
-    return 0;
+    return 1;
 }
 
 int DrawNode(struct NODE* node, FILE* file_ptr)
@@ -47,7 +52,7 @@ int DrawNode(struct NODE* node, FILE* file_ptr)
         return -1;
     }
 
-    fprintf(file_ptr, "  \"%p\" [shape = Mrecord, ", node);
+    fprintf(file_ptr, "  \"%p\" [shape = Mrecord, ",(void*) node);
 
     if (!node->left && !node->right)
     {
@@ -77,7 +82,6 @@ int DrawNode(struct NODE* node, FILE* file_ptr)
         {
             if (node->value.oper_value == operations[i].code)
             {
-                printf(" op: %d %s\n",operations[i].code, operations[i].name_symbol);
                 fprintf(file_ptr, "%s", operations[i].name_symbol);
 
                 break;
@@ -92,12 +96,12 @@ int DrawNode(struct NODE* node, FILE* file_ptr)
 
     if (node->left)
     {
-        fprintf(file_ptr, "  \"%p\" -> \"%p\";\n", node, node->left);
+        fprintf(file_ptr, "  \"%p\" -> \"%p\";\n",(void*) node,(void*) node->left);
     }
 
     if (node->right)
     {
-        fprintf(file_ptr, "  \"%p\" -> \"%p\";\n", node, node->right);
+        fprintf(file_ptr, "  \"%p\" -> \"%p\";\n",(void*) node,(void*) node->right);
     }
 
     return 0;
