@@ -4,12 +4,22 @@ int main(int argc, char* argv[])
 {
     struct Options opts = {0};
     int opt;
-    struct option long_options[] = {{"elbrus", required_argument, 0, 'e'}, {0, 0, 0, 0}};
+    struct option long_options[] = {{"elbrus", required_argument, 0, 'e'}, {0, 0, 0, 0}};//Структура опций
 
     opts.elbrus_values = calloc(argc ,sizeof(char*));
-    opts.non_options   = calloc(argc, sizeof(char*));
+    if(!opts.elbrus_values)
+    {
+        perror("ERROR: elbrus_values");
+        return 1;
+    }
+    opts.non_options = calloc(argc, sizeof(char*));
+    if(!opts.non_options)
+    {
+        perror("ERROR: non_options");
+        return 1;
+    }
 
-    while (true) 
+    while (true)//Цикл обработки аргументов командной строки
     {
         opt = getopt_long(argc, argv, "mcst", long_options, NULL);
         
@@ -18,7 +28,7 @@ int main(int argc, char* argv[])
             break;
         }
         
-        switch (opt) 
+        switch (opt)//Обработка аргументов 
         {
             case 'm': 
             {
@@ -59,7 +69,7 @@ int main(int argc, char* argv[])
             }    
         }
     }    
-    for (int i = optind; i < argc; i++) 
+    for (int i = optind; i < argc; i++)//Обработка аргументов не опций 
     {
         if (argv[i][0] != '-') 
         {
@@ -72,7 +82,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    printf("Options are correct:");
+    printf("Options are correct:");//Вывод результатов
     if (opts.m == 1) 
     {
         printf(" m");

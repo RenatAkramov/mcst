@@ -9,6 +9,7 @@ const struct operations_t operations[] = {
     {"XNOR", XNOR}
 };
 
+//Начало построение графического представления дерева
 int DrawTree(struct NODE* root)
 {   
     if (!root)
@@ -17,7 +18,7 @@ int DrawTree(struct NODE* root)
         return -1;
     }
 
-    FILE* file_ptr = fopen("grafdump.dot", "w");
+    FILE* file_ptr = fopen("grafdump.dot", "w");//Файл для вывода 
     if (!file_ptr)
     {
         fprintf(stderr, "File \"grafdump.dot\" error!\n");
@@ -42,7 +43,7 @@ int DrawTree(struct NODE* root)
     return 1;
 }
 
-int DrawNode(struct NODE* node, FILE* file_ptr)
+int DrawNode(struct NODE* node, FILE* file_ptr)//Построение одного узла
 {
     if (!node) return 0;
 
@@ -73,7 +74,6 @@ int DrawNode(struct NODE* node, FILE* file_ptr)
     }
     else if (node->type == VAR)
     {
-        //printf("IN var\n");
         fprintf(file_ptr,  "%c", node->value.var_value);
     }
     else
@@ -91,7 +91,7 @@ int DrawNode(struct NODE* node, FILE* file_ptr)
 
     fprintf(file_ptr, "\"];\n");
 
-    if (DrawNode(node->left,  file_ptr) != 0) return -1;
+    if (DrawNode(node->left,  file_ptr) != 0) return -1;//Рекурсивный запуск построения следующих узлов
     if (DrawNode(node->right, file_ptr) != 0) return -1;
 
     if (node->left)

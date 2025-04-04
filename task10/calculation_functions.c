@@ -67,7 +67,7 @@ int evaluate(struct NODE* node, Variable* vars, int var_count) {
 // Генерация всех комбинаций и вывод таблицы
 void print_truth_table(struct NODE* root) 
 {
-    Variable vars[max_variable]; // Максимум 10 переменных
+    Variable vars[max_variable]; 
     int var_count = 0;
 
     // Собираем переменные
