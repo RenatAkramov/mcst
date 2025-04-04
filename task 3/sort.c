@@ -5,7 +5,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 4) 
     {
-        fprintf(stderr, "Использование: %s входной_файл выходной_файл [alph|alph_d|len|len_r]\n", argv[0]);
+        fprintf(stderr, "Использование: %s входной_файл выходной_файл [alph|alph_r|len|len_r]\n", argv[0]);
         return EXIT_FAILURE;
     }
 
@@ -13,12 +13,12 @@ int main(int argc, char *argv[])
     const char *output_filename = argv[2];
     const char *sort_method = argv[3];
 
-    int (*compare)(const void*, const void*);
+    int (*compare)(const void*, const void*);//Выбор компоратора
     if (strcmp(sort_method, "alph") == 0) 
     {
         compare = compare_alph;
     }    
-    else if (strcmp(sort_method, "alph_d") == 0)
+    else if (strcmp(sort_method, "alph_r") == 0)
     {
         compare = compare_alph_d;
     }    
@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     FILE *input = fopen(input_filename, "r");
     if (!input) 
     {
-        fprintf(stderr, "Ошибка открытия файла");
+        perror("Ошибка открытия файла");
         return EXIT_FAILURE;
     }
 
@@ -60,21 +60,19 @@ int main(int argc, char *argv[])
         {
             continue;
         }
-        char *line_copy = calloc(strlen(line) + 1, sizeof(char));
-        strcpy(line_copy, line);
-        
-
+        char* line_copy = calloc(strlen(line) + 1, sizeof(char));
         if (!line_copy) 
         {
-            fprintf(stderr,"Ошибка выделения памяти");
-            break;
+            perror("Ошибка выделения памяти");
+            return EXIT_FAILURE;
         }
+        strcpy(line_copy, line);        
 
         lines = realloc(lines, sizeof(char*) * (count + 1));
         if (!lines) 
         {
-            fprintf(stderr, "Ошибка выделения памяти");
-            break;
+            perror( "Ошибка выделения памяти");
+            return EXIT_FAILURE;
         }
 
         lines[count++] = line_copy;
@@ -88,17 +86,20 @@ int main(int argc, char *argv[])
     FILE *output = fopen(output_filename, "w");
     if (!output) 
     {
-        fprintf(stderr, "Ошибка создания файла");
-        for (size_t i = 0; i < count; i++) free(lines[i]);
+        perror("Ошибка создания файла");
+        for (size_t i = 0; i < count; i++) 
+        {
+            free(lines[i]);
+        }    
         free(lines);
         return EXIT_FAILURE;
     }
 
-    printf("Отсортированные строки:\n");
+    fprintf(stdin,"Отсортированные строки:\n");
     for (size_t i = 0; i < count; i++) 
     {
         fprintf(output, "%s\n", lines[i]);
-        printf("%s\n", lines[i]);
+        fprintf(stdout, "%s\n", lines[i]);
         free(lines[i]);
     }
 
@@ -107,7 +108,7 @@ int main(int argc, char *argv[])
     return EXIT_SUCCESS;
 }
 
-char get_first_letter(const char *str1, const char *str2) 
+char get_first_letter(const char *str1, const char *str2)//Выбрать первые две неодинаковые буквы 
 {
     while (*str1 && *str2) 
     {
@@ -126,7 +127,7 @@ char get_first_letter(const char *str1, const char *str2)
 
 
 
-int is_empty_line(const char *line) 
+int is_empty_line(const char *line)//Проверка на пустую строку 
 {
     while (*line != '\0') 
     {
@@ -140,7 +141,7 @@ int is_empty_line(const char *line)
 }
 
 
-int compare_alph(const void *a, const void *b) 
+int compare_alph(const void *a, const void *b)//Компоратор в алфавитном порядке 
 {
     const char *str1 = *(const char **)a;
     const char *str2 = *(const char **)b;
@@ -148,19 +149,19 @@ int compare_alph(const void *a, const void *b)
     return get_first_letter(str1, str2);
    
 }
-int compare_alph_d(const void *a, const void *b) 
+int compare_alph_d(const void *a, const void *b)//Компоратор в обратном алфавитном порядке 
 {
     return -compare_alph(a, b);
 }
 
-int compare_len(const void *a, const void *b) 
+int compare_len(const void *a, const void *b)//Компоратор по длине строк от короткой к длинной
 {
     size_t len_a = strlen(*(const char **)a);
     size_t len_b = strlen(*(const char **)b);
     return (len_a > len_b) - (len_a < len_b);
 }
 
-int compare_len_reverse(const void *a, const void *b) 
+int compare_len_reverse(const void *a, const void *b)//Компоратор по длине строк от длинной к короткой
 {
     return -compare_len(a, b);
 }

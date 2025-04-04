@@ -17,9 +17,9 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    printf("1. errno = %d\n", errno);
-    perror("2. perror");
-    printf("3. strerror: %s\n", strerror(errno));
+    printf("1. errno = %d\n", errno);//вывод с помощью errno
+    perror("2. perror");//Вывод  с помощью perror
+    printf("3. strerror: %s\n", strerror(errno));//Вывод с помощью strerror
     
     /*extern const char *const sys_errlist[];
     extern int sys_nerr;

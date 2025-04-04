@@ -19,11 +19,11 @@ int main(int argc, char* argv[])
     int* numbers = NULL; // Массив чисел
     int count = 0;       // Количество чисел
     numbers = read_array(file, &count);
-
     if (numbers == NULL)
     {
         fprintf(stderr, "Error creating array\n");
     }
+
     int start   = 0; // Начало максимальной последовательности
     int end     = 0; // Конец  максимальной последовательности
     int max_sum = 0; // Сумма  максимальной последовательности
@@ -32,22 +32,27 @@ int main(int argc, char* argv[])
 
     for (int i = start; i < end + 1; i++) // Вывод данных в консоль
     {
-        printf("%d ", numbers[i]);
+        fprintf(stdout, "%d ", numbers[i]);
     }
-    printf("\n max_sum = %d\n", max_sum);
+    fprintf(stdout, "\n max_sum = %d\n", max_sum);
 
 
     if (argc == 3)
     {
         fprintf(stdout, "The data is output to the file: %s", argv[2]);
         FILE* file_out = fopen(argv[2], "w");
+        if (!file_out)
+        {
+            perror("ERROR: in fopen file");
+            return 1;
+        }
         for (int i = start; i < end + 1; i++) // Вывод данных в консоль
         {
             fprintf(file_out, "%d ", numbers[i]);
         }
         fprintf(file_out, "\n max_sum = %d\n", max_sum);
     }
-    return 1;
+    return 0;
 }
 
 // Считывание данных с файла
@@ -58,10 +63,10 @@ int* read_array(FILE* file, int* count)
 
     while (fscanf(file, "%d", &num) == 1) 
     {
-        int *temp = realloc(numbers, (*count + 1) * sizeof(int));
-        if (temp == NULL) 
+        int* temp = realloc(numbers, (*count + 1) * sizeof(int));
+        if (!temp)
         {
-            perror("Memory allocation error\n");
+            perror("ERROR: Memory allocation error");
             free(numbers);
             fclose(file);
             return NULL;

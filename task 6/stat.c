@@ -2,7 +2,7 @@
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2)
+    if (argc < 2)//Обработка ситуации, когда не ввели названия файлов
     {
         fprintf(stderr, "File name not specified\n");
         return 1;
@@ -10,16 +10,16 @@ int main(int argc, char* argv[])
     for (int i = 1; i < argc; i++)
     {
         struct stat file_info = {0};
-        const char* file_name = argv[1];
+        const char* file_name = argv[i];
         
         if (stat(file_name, &file_info) == -1)
         {
-            fprintf(stderr, "Error stat with %s\n", file_name);
+            fprintf(stderr, "ERROR: stat with \"%s\"\n", file_name);
             return 1;
         }
 
         printf("File: %s\n", file_name);
-        printf("Type: ");
+        printf("Type: ");//Вывод типа файла
 
         if (S_ISREG(file_info.st_mode))
         {
@@ -50,11 +50,8 @@ int main(int argc, char* argv[])
             printf("Unknown type\n");
         }
 
-        printf("Size in byte: %ld\n", file_info.st_size);
-        printf("Inode: %ld\n", file_info.st_ino);
-        printf("The time the file was last modified: %s", ctime(&file_info.st_mtime));
-        printf("File creation time: %s", ctime(&file_info.st_ctime));
-        printf("Last access time of the file: %s", ctime(&file_info.st_atime));
+        printf("Size in byte: %ld\n Inode: %ld\n The time the file was last modified: %sFile creation time: %s Last access time of the file: %s\n\n\n",
+              file_info.st_size, file_info.st_ino, ctime(&file_info.st_mtime), ctime(&file_info.st_ctime), ctime(&file_info.st_atime));//Вывод осталбных данных
     }
     return 0;
 }
