@@ -1,4 +1,4 @@
-# Syntax Analysis
+# Syntax Analysis and Calculation boolean functions
 
 ## Installation
 
