@@ -3,10 +3,9 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-
-int main(int argc, char* argv[])
+int main(int argc, char* argv[]) 
 {
-    if (argc != 2)
+    if (argc != 2) 
     {
         fprintf(stderr, "Please, enter correct name of file\n");
         return EXIT_FAILURE;
@@ -15,69 +14,90 @@ int main(int argc, char* argv[])
     FILE* input = fopen(argv[1], "r");
     if (!input) 
     {
-        perror("Ошибка открытия файла");
+        perror("ERROR: memory not allocated");
         return EXIT_FAILURE;
     }
 
-    pid_t pid = fork();
     char **lines = NULL;
     size_t count = 0;
     char *line = NULL;
     size_t len = 0;
-    size_t read;
+    ssize_t read;
 
-    while ((read = getline(&line, &len, input)) != (size_t) -1) 
+
+    while ((read = getline(&line, &len, input)) != -1) 
     {
         if (read > 0 && line[read-1] == '\n') 
         {
             line[read-1] = '\0';
         }
-        char* line_copy = calloc(strlen(line) + 1, sizeof(char));
+        char* line_copy = strdup(line);
         if (!line_copy) 
         {
-            perror("Ошибка выделения памяти");
+            perror("ERROR: memory not allocated");
             return EXIT_FAILURE;
         }
-        strcpy(line_copy, line);        
-
         lines = realloc(lines, sizeof(char*) * (count + 1));
         if (!lines) 
         {
-            perror( "Ошибка выделения памяти");
+            perror("ERROR: memory not allocated");
             return EXIT_FAILURE;
         }
-
         lines[count++] = line_copy;
     }
+    free(line);
     fclose(input);
-    if(pid == 0)
+
+    pid_t pid = fork();
+    if (pid == -1) 
     {
-        FILE* child_file = fopen("child_file.txt", "w");
-        if (!child_file) 
-        { 
-            perror("Ошибка создания child_file.txt");
-            exit(EXIT_FAILURE);
-        }
-        for(int i = 0; i < count; i++)
-        {
-            fprintf(child_file,"%s\n", lines[i]);
-        }
-        fclose(child_file);
-        printf("child\n");
-        exit(EXIT_SUCCESS);
+        perror("fork failed");
+        return EXIT_FAILURE;
     }
+
+    const char* output_file;
+    if (pid == 0) {
+        output_file = "child_file.txt";
+    } else {
+        output_file = "parents_file.txt";
+    }
+
+    FILE* file_out = fopen(output_file, "w");
+    if (!file_out) 
+    {
+        perror("ERROR: doesn't open file_out");
+        for (size_t i = 0; i < count; i++)
+        {
+            free(lines[i]);
+        }
+        free(lines);
+        return EXIT_FAILURE;
+    }
+
+    for (size_t i = 0; i < count; i++) 
+    {
+        fprintf(file_out, "%s\n", lines[i]);
+    }
+    fclose(file_out);
+
+    for (size_t i = 0; i < count; i++)
+    {
+        free(lines[i]);
+    }    
+    free(lines);
+
+    if (pid == 0) 
+    {
+        return EXIT_SUCCESS;
+    } 
     else 
     {
         int status;
         waitpid(pid, &status, 0);
-        FILE* parents_file = fopen("parents_file.txt", "w");
-        for(int i = 0; i < count; i++)
-        {
-            fprintf(parents_file,"%s\n", lines[i]);
-        }
-        printf("parents\n");
-        fclose(parents_file);
         return EXIT_SUCCESS;
     }
+}
+
+   
     
-}    
+    
