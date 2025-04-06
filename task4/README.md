@@ -3,7 +3,7 @@
 ## Installation
 Инструмент командной строки PAR — это утилита, позволяющая анализировать и обрабатывать аргументы командной строки, включая поддержку опции «elbrus».
 
-To use the PAR tool, you'll need to compile the source code. Use a makefile:
+Чтобы скомпилировать проект, используйте makefile:
 
 ```
 make

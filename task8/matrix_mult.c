@@ -1,39 +1,60 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
-#include <time.h>
+#include "matrix_mult.h"
 
-#define SIZE 1000
+int main() 
+{
+ 
+    CHECK_CREATE_ALLOC(matrix1);//Cоздаем массивы матриц
+    CHECK_CREATE_ALLOC(matrix2);
+    CHECK_CREATE_ALLOC(result);
+    
+    for (int x = 0; x < SIZE; x++) 
+    {
+        matrix1[x] = calloc(SIZE, sizeof(int));
+        if (matrix1[x] == NULL)
+        {
+            perror("ERROR: memory not allocated");
+            return EXIT_FAILURE;
+        }
+           
+        matrix2[x] = calloc(SIZE, sizeof(int));
+        if (matrix2[x] == NULL)
+        {
+            perror("ERROR: memory not allocated");
+            return EXIT_FAILURE;
+        }
+        
+        result[x]  = calloc(SIZE, sizeof(int));
+        if (result[x] == NULL)
+        {
+            perror("ERROR: memory not allocated");
+            return EXIT_FAILURE;
+        }
+    }
 
-volatile sig_atomic_t i = 0;
-volatile sig_atomic_t j = 0;
-volatile sig_atomic_t sigint_count = 0;
+    random_nuber(matrix1, matrix2);//Заполняем массивы рандомными числами
 
-void handle_sigint_signal() 
+    signal(SIGINT, handle_sigint_signal);
+    calculate_matrix(matrix1, matrix2, result);
+
+    return 0;
+}
+
+//Обработка сигналов 
+void handle_sigint_signal()
 {
     if (sigint_count == 0) 
     {
-        printf("\nCurrent indices: i=%d, j=%d\n", i, j);
+        fprintf(stdout,"\nCurrent indices: i=%d, j=%d\n", i, j);
         fflush(stdout);
         signal(SIGINT, SIG_DFL); 
         sigint_count++;
     }
 }
-
-int main() 
+//Заполняем массивы рандомными числами
+void random_nuber(int** matrix1, int** matrix2)
 {
- 
-    int** matrix1 = calloc(SIZE, sizeof(int*));
-    int** matrix2 = calloc(SIZE, sizeof(int*));
-    int** result  = calloc(SIZE, sizeof(int*));
-    for (int x = 0; x < SIZE; x++) 
-    {
-        matrix1[x] = calloc(SIZE, sizeof(int));
-        matrix2[x] = calloc(SIZE, sizeof(int));
-        result[x]  = calloc(SIZE, sizeof(int));
-    }
-
+    assert(matrix1);
+    assert(matrix2);
     srand(time(NULL));
     for (int x = 0; x < SIZE; x++) 
     {
@@ -43,11 +64,14 @@ int main()
             matrix2[x][y] = rand() % 100;
         }
     }
+}
 
-
-    signal(SIGINT, handle_sigint_signal);
-
-    
+//Считаем матрицы
+void calculate_matrix(int** matrix1, int** matrix2, int** result)
+{
+    assert(matrix1);
+    assert(matrix2);
+    assert(result);
     for (i = 0; i < SIZE; i++) 
     {
         for (j = 0; j < SIZE; j++) 
@@ -60,7 +84,6 @@ int main()
         }
     }
 
-
     for (int x = 0; x < SIZE; x++) 
     {
         free(matrix1[x]);
@@ -70,6 +93,4 @@ int main()
     free(matrix1);
     free(matrix2);
     free(result);
-
-    return 0;
 }
